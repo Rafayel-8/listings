@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCu-GxF46Pa5pz03eJ5fwOdeC1id74AsJA",
+    apiKey: "AIzaSyDJSz3de5bwP0DqlNPAQ8GSNvQvsMrVow4",
     authDomain: "mywebsite-b6912.firebaseapp.com",
     projectId: "mywebsite-b6912",
     storageBucket: "mywebsite-b6912.appspot.com",
