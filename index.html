@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Listing</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #1e1e1e;
+      color: #eaeaea;
+    }
+    header {
+      background-color: #213b3b;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px 5px;
+      background-color: #4d6647;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background-color: #60805a;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 10px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #555;
+      background-color: #2e2e2e;
+      color: #fff;
+      outline: none;
+    }
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    .listings h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Listing</h1>
+    <div class="lang-switch">
+      <button class="btn" onclick="setLang('en')">EN</button>
+      <button class="btn" onclick="setLang('ru')">RU</button>
+      <button class="btn" onclick="setLang('hy')">HY</button>
+    </div>
+    <div id="auth-buttons">
+      <button class="btn" data-i18n="add" onclick="location.href='add.html'">Add</button>
+      <button class="btn" data-i18n="register" onclick="location.href='register.html'">Register</button>
+      <button class="btn" data-i18n="login" onclick="location.href='login.html'">Login</button>
+      <button class="btn" data-i18n="logout" onclick="location.href= 'logout.html'">Logout</button>
+      <button class="btn" data-i18n="profil" onclick="location.href='profile.html'">Profile</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." data-i18n-placeholder="searchPlaceholder">
+      <button class="btn" data-i18n="search">Search</button>
+    </div>
+
+    <div class="category-buttons">
+      <button class="btn" data-i18n="category_sale">Sale</button>
+      <button class="btn" data-i18n="category_services">Services</button>
+      <button class="btn" data-i18n="category_jobs">Jobs</button>
+      <button class="btn" data-i18n="category_cafe">Business</button>
+      <button class="btn" data-i18n="category_auto">Auto</button>
+      <button class="btn" data-i18n="category_home">Real Estate</button>
+    </div>
+
+    <div class="listings">
+      <h2 data-i18n="listings">Listings</h2>
+      <p data-i18n="noListings">No listings found.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-GxF46Pa5pz03eJ5fwOdeC1id74AsJA",
+      authDomain: "mywebsite-b6912.firebaseapp.com",
+      projectId: "mywebsite-b6912",
+      storageBucket: "mywebsite-b6912.appspot.com",
+      messagingSenderId: "431907285830",
+      appId: "1:431907285830:web:a8aa08c9438ad752e49347"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.logout = () => {
+      signOut(auth).then(() => {
+        alert("Logged out");
+      }).catch(err => {
+        console.error("Logout error", err);
+      });
+    };
+
+    onAuthStateChanged(auth, user => {
+      console.log("User:", user ? user.email : "Not logged in");
+    });
+  </script>
+
+  <script>
+    const translations = {
+      en: {
+        add: "Add",
+        register: "Register",
+        login: "Login",
+        logout: "Logout",
+        search: "Search",
+        searchPlaceholder: "Search...",
+        listings: "Listings",
+        noListings: "No listings found.",
+        category_sale: "Sale",
+        category_services: "Services",
+        category_jobs: "Jobs",
+        category_cafe: "Business",
+        category_auto: "Auto",
+        category_home: "Real Estate",
+        profil: "Profile"
+      },
+      ru: {
+        add: "Добавить",
+        register: "Регистрация",
+        login: "Вход",
+        logout: "Выход",
+        search: "Поиск",
+        searchPlaceholder: "Поиск...",
+        listings: "Объявления",
+        noListings: "Объявления не найдены.",
+        category_sale: "Продажа",
+        category_services: "Услуги",
+        category_jobs: "Работа",
+        category_cafe: "Бизнес",
+        category_auto: "Авто",
+        category_home: "Недвижимость",
+        profil: "Профиль"
+      },
+      hy: {
+        add: "Ավելացնել",
+        register: "Գրանցում",
+        login: "Մուտք",
+        logout: "Ելք",
+        search: "Որոնում",
+        searchPlaceholder: "Որոնել...",
+        listings: "Գովազդներ",
+        noListings: "Գովազդներ չեն գտնվել։",
+        category_sale: "Վաճառք",
+        category_services: "Ծառայություններ",
+        category_jobs: "Աշխատանք",
+        category_cafe: "Բիզնես",
+        category_auto: "Ավտո",
+        category_home: "Անշարժ գույք",
+        profil: "Պրոֆիլ"
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("lang", lang);
+      updateTexts();
+    }
+
+    function updateTexts() {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = translations[currentLang][key] || key;
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        el.placeholder = translations[currentLang][key] || key;
+      });
+    }
+
+    updateTexts();
+  </script>
+</body>
+</html>

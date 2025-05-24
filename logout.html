@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logging out...</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #eaeaea;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4d6647;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 data-i18n="loggingOut">Logging out...</h2>
+  <p data-i18n="pleaseWait">Please wait, you will be redirected shortly.</p>
+  <button class="btn" onclick="location.href='index.html'" data-i18n="back">Go to Home</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-GxF46Pa5pz03eJ5fwOdeC1id74AsJA",
+      authDomain: "mywebsite-b6912.firebaseapp.com",
+      projectId: "mywebsite-b6912",
+      storageBucket: "mywebsite-b6912.appspot.com",
+      messagingSenderId: "431907285830",
+      appId: "1:431907285830:web:a8aa08c9438ad752e49347"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    signOut(auth).then(() => {
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    }).catch((error) => {
+      console.error("Sign-out error:", error);
+    });
+  </script>
+
+  <script>
+    const translations = {
+      en: {
+        loggingOut: "Logging out...",
+        pleaseWait: "Please wait, you will be redirected shortly.",
+        back: "Go to Home"
+      },
+      ru: {
+        loggingOut: "Выход...",
+        pleaseWait: "Пожалуйста, подождите. Перенаправление...",
+        back: "На главную"
+      },
+      hy: {
+        loggingOut: "Ելք...",
+        pleaseWait: "Խնդրում ենք սպասել, դուք կուղղորդվեք...",
+        back: "Գլխավոր էջ"
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+    function updateTexts() {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = translations[currentLang][key] || key;
+      });
+    }
+    updateTexts();
+  </script>
+</body>
+</html>

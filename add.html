@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="add">Add</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #1e1e1e;
+      color: #eaeaea;
+    }
+
+    header {
+      background-color: #213b3b;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #4d6647;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #60805a;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, textarea, select {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #555;
+      background-color: #2e2e2e;
+      color: white;
+      outline: none;
+    }
+
+    label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Listing</h1>
+    <button class="btn" onclick="location.href='index.html'" data-i18n="back">Back</button>
+  </header>
+
+  <div class="container">
+    <h2 data-i18n="add">Add Listing</h2>
+    <form id="listing-form">
+      <label data-i18n="title">Title</label>
+      <input type="text" name="title" required />
+
+      <label data-i18n="description">Description</label>
+      <textarea name="description" required></textarea>
+
+      <label data-i18n="price">Price</label>
+      <input type="number" name="price" required />
+
+      <label data-i18n="phone">Phone Number</label>
+      <input type="tel" name="phone" required />
+
+      <label data-i18n="location">Location</label>
+      <input type="text" name="location" required />
+
+      <label data-i18n="category">Category</label>
+      <select name="category" required>
+        <option value="sale" data-i18n="category_sale">Sale</option>
+        <option value="services" data-i18n="category_services">Services</option>
+        <option value="jobs" data-i18n="category_jobs">Jobs</option>
+        <option value="cafe" data-i18n="category_cafe">Business</option>
+        <option value="auto" data-i18n="category_auto">Auto</option>
+        <option value="home" data-i18n="category_home">Real Estate</option>
+      </select>
+
+      <label data-i18n="image">Image</label>
+      <input type="file" name="image" accept="image/*" required />
+
+      <button class="btn" type="submit" data-i18n="submit">Submit</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCu-GxF46Pa5pz03eJ5fwOdeC1id74AsJA",
+      authDomain: "mywebsite-b6912.firebaseapp.com",
+      projectId: "mywebsite-b6912",
+      storageBucket: "mywebsite-b6912.appspot.com",
+      messagingSenderId: "431907285830",
+      appId: "1:431907285830:web:a8aa08c9438ad752e49347"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const form = document.getElementById('listing-form');
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        location.href = 'login.html';
+      }
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const title = form.title.value;
+        const description = form.description.value;
+        const price = form.price.value;
+        const phone = form.phone.value;
+        const locationVal = form.location.value;
+        const category = form.category.value;
+        const imageFile = form.image.files[0];
+
+        const imageRef = ref(storage, `images/${Date.now()}_${imageFile.name}`);
+        await uploadBytes(imageRef, imageFile);
+        const imageUrl = await getDownloadURL(imageRef);
+
+        await addDoc(collection(db, "listings"), {
+          uid: user.uid,
+          title,
+          description,
+          price: Number(price),
+          phone,
+          location: locationVal,
+          category,
+          imageUrl,
+          createdAt: serverTimestamp()
+        });
+
+        alert("Listing added!");
+        form.reset();
+        location.href = "index.html";
+      });
+    });
+  </script>
+
+  <script>
+    const translations = {
+      en: {
+        add: "Add",
+        back: "Back",
+        title: "Title",
+        description: "Description",
+        price: "Price",
+        phone: "Phone Number",
+        location: "Location",
+        category: "Category",
+        image: "Image",
+        submit: "Submit",
+        category_sale: "Sale",
+        category_services: "Services",
+        category_jobs: "Jobs",
+        category_cafe: "Business",
+        category_auto: "Auto",
+        category_home: "Real Estate"
+      },
+      ru: {
+        add: "Добавить",
+        back: "Назад",
+        title: "Заголовок",
+        description: "Описание",
+        price: "Сумма",
+        phone: "Номер телефона",
+        location: "Местоположение",
+        category: "Категория",
+        image: "Изображение",
+        submit: "Отправить",
+        category_sale: "Продажа",
+        category_services: "Услуги",
+        category_jobs: "Работа",
+        category_cafe: "Бизнес",
+        category_auto: "Авто",
+        category_home: "Недвижимость"
+      },
+      hy: {
+        add: "Ավելացնել",
+        back: "Վերադառնալ",
+        title: "Վերնագիր",
+        description: "Նկարագրություն",
+        price: "Գին",
+        phone: "Հեռախոսահամար",
+        location: "Տեղեկություն",
+        category: "Կատեգորիա",
+        image: "Նկար",
+        submit: "Ուղարկել",
+        category_sale: "Վաճառք",
+        category_services: "Ծառայություններ",
+        category_jobs: "Աշխատանք",
+        category_cafe: "Բիզնես",
+        category_auto: "Ավտո",
+        category_home: "Անշարժ գույք"
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function updateTexts() {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = translations[currentLang][key] || key;
+      });
+    }
+
+    updateTexts();
+  </script>
+</body>
+</html>
