@@ -1,6 +1,3 @@
-<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-<script src="/firebase-init.js"></script>
 const firebaseConfig = {
     apiKey: "AIzaSyDJSz3de5bwP0DqlNPAQ8GSNvQvsMrVow4",
     authDomain: "mywebsite-b6912.firebaseapp.com",
